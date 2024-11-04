@@ -9,3 +9,5 @@ class Document(models.Model):
     @property
     def s3_key(self):
         return self.file.name
+    
+    

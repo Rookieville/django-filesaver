@@ -11,10 +11,24 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
+
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+# Initialize environment variables
+env = environ.Env(
+    # Set default values and casting
+    DEBUG=(bool, False)
+)
+
+# Read the .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -146,10 +160,10 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-AWS_ACCESS_KEY_ID = 'your-access-key-id'
-AWS_SECRET_ACCESS_KEY = 'your-secret-access-key'
-AWS_STORAGE_BUCKET_NAME = 'your-s3-bucket-name'
-AWS_S3_REGION_NAME = 'your-region'  
+AWS_ACCESS_KEY_ID = env('S3_ACCESS_KEY')
+AWS_SECRET_ACCESS_KEY = env('S3_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = env('S3_BUCKET_NAME')
+AWS_S3_REGION_NAME = env('S3_REGION') 
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 
 # For serving static files directly from S3
@@ -158,8 +172,8 @@ AWS_S3_USE_SSL = True
 AWS_S3_VERIFY = True
 
 # Static and media file configuration
-# STATIC_URL = f'{AWS_S3_URL_PROTOCOL}://{AWS_S3_CUSTOM_DOMAIN}/static/'
-# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATIC_URL = f'{AWS_S3_URL_PROTOCOL}://{AWS_S3_CUSTOM_DOMAIN}/static/'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-# MEDIA_URL = f'{AWS_S3_URL_PROTOCOL}://{AWS_S3_CUSTOM_DOMAIN}/media/'
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+MEDIA_URL = f'{AWS_S3_URL_PROTOCOL}://{AWS_S3_CUSTOM_DOMAIN}/media/'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

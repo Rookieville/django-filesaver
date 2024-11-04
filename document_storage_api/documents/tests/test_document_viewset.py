@@ -9,7 +9,6 @@ class DocumentViewsetTests(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.url = '/api/v1/documents/'
-
         self.test_file = SimpleUploadedFile('test_document.pdf', b'test content', content_type='file/pdf')
         self.document = Document.objects.create(title="Initial Test Document", file=self.test_file)
 
